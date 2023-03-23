@@ -25,10 +25,13 @@ public class Mapping {
         return Methode;
     }
 
-    public void setMethode(String Methode) {
-        this.Methode = Methode;
+    public void setMethode(String methode) {
+        this.Methode = methode;
     }
     
-    
+    public Mapping(String className, String method) {
+        this.className = className;
+        this.method = method;
+    }
     
 }
