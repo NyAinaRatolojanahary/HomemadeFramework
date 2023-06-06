@@ -1,10 +1,10 @@
 @REM For the framework compilation
 
-set "FRAMEWORK_FOLDER=D:\Bossy\L2\S4\WebDyn Mr Naina\Homemade\"
+set "FRAMEWORK_FOLDER=D:\Bossy\L2\S4\MyFramework\"
 
-set FRAMEWORK="D:\Bossy\L2\S4\WebDyn Mr Naina\Homemade\Framework"
+set FRAMEWORK="D:\Bossy\L2\S4\MyFramework\Framework"
 set TOMCAT="C:\Program Files\Apache Software Foundation\Tomcat 10.0\webapps"
-set TESTFRAMEWORK="D:\Bossy\L2\S4\WebDyn Mr Naina\Homemade\Test"
+set TESTFRAMEWORK="D:\Bossy\L2\S4\MyFramework\Test"
 
 javac -d %FRAMEWORK%\bin %FRAMEWORK%\\*.java
 cd %FRAMEWORK%\\bin\\
