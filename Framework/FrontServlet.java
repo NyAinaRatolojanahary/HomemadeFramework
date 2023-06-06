@@ -39,8 +39,36 @@ public class FrontServlet extends HttpServlet {
         }
         public void processRequest(HttpServletRequest request, HttpServletResponse response)
                 throws ServletException, IOException {
-            try (PrintWriter out = response.getWriter()) {
-                out.println(" ok ");
+            try {
+                String url = request.getRequestURI().substring(request.getContextPath().length()+1);
+                out.println(this.mappingUrls);
+                if (this.mappingUrls.containsKey(url))
+                {
+                    Mapping mapping = this.mappingUrls.get(url);
+                    Class clazz = Class.forName(mapping.getClassName());
+                    Object object = clazz.getConstructor().newInstance();
+                    Method[] methods = object.getClass().getDeclaredMethods();
+                    Method equalMethod = null;
+                    for (int i = 0; i < methods.length; i++) {
+                        if (methods[i].getName().trim().compareTo(mapping.getMethod())==0) {
+                            equalMethod = methods[i];
+                            break;
+                        }
+                    }
+                    Object[] objects = new Object[1];
+                    Object returnObject = equalMethod.invoke(object);
+                    if (returnObject instanceof ModelView) {
+                        ModelView modelview = (ModelView) returnObject;
+                        HashMap<String,Object> data = modelview.getData();
+                        for(Map.Entry<String,Object> o : data.entrySet()){
+                            request.setAttribute(o.getKey(),o.getValue());
+                        }  
+                        RequestDispatcher requestDispatcher = request.getRequestDispatcher(modelview.getView());
+                        requestDispatcher.forward(request, response);
+                    }
+                }
+            } catch (Exception e) {
+                // TODO: handle exception
             }
         }
 
