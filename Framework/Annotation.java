@@ -15,7 +15,7 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Annotation {
 
-    String value() default "defaultvalue";
+    String url() default "";
  
 
 
