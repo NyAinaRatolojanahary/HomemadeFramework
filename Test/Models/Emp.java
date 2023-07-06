@@ -17,4 +17,13 @@ public class Emp {
         return temp;
     } 
 
+    public ModelView getModel(){
+        ModelView temp = new ModelView();
+        temp.setView("Teste.jsp");
+        int value = 25;
+        temp.addItem("Mety",value);
+
+        return temp;
+    }
+
 }

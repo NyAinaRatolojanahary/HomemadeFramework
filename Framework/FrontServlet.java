@@ -39,9 +39,8 @@ public class FrontServlet extends HttpServlet{
             }
         }
         public void processRequest(HttpServletRequest request, HttpServletResponse response)
-                throws ServletException, IOException {
-            
-            PrintWriter out = response.getWriter();
+                throws ServletException, IOException {      
+                PrintWriter out = response.getWriter();
                 try {
                     String url = request.getRequestURI().substring(request.getContextPath().length()+1);
                     out.println(this.mappingUrls);
@@ -68,7 +67,6 @@ public class FrontServlet extends HttpServlet{
                     }
                 }   
                 catch (Exception e) {e.printStackTrace(out);}
-
 
         }
 
