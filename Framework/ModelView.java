@@ -3,8 +3,8 @@ package ETU2058.Framework;
 public class ModelView{
 
     String view;
-    HashMap data;
-
+    HashMap<String, Object> data;
+  
     public String getView(){
         return this.view;
     }
