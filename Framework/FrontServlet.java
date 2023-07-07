@@ -9,6 +9,13 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Field;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.Locale;
+import java.util.Map;
+import java.text.SimpleDateFormat;
 
 import ETU2058.Framework.Annotation;
 import ETU2058.Framework.Mapping;
@@ -45,12 +52,45 @@ public class FrontServlet extends HttpServlet{
                 try {
                     String url = request.getRequestURI().substring(request.getContextPath().length()+1);
                     out.println(this.mappingUrls);
+                    out.println("Sababa");
                     if (this.mappingUrls.containsKey(url))
                     {
                         Mapping mapping = this.mappingUrls.get(url);
                         Class clazz = Class.forName(mapping.getClassName());
                         Object object = clazz.getConstructor().newInstance();
                         Method[] methods = object.getClass().getDeclaredMethods();
+                        Field[] input = clazz.getDeclaredFields();
+                        Enumeration<String> nom = request.getParameterNames();
+                        List<String> list = Collections.list(nom);
+                        for (int k = 0; k < input.length; k++) {    
+                            String table = input[k].getName() + ((input[k].getType().isArray()) ? "[]" : "");
+                            for (int j = 0; j < list.size(); j++) {
+                                if (input[k].getName().trim().equals(list.get(j).trim())) {
+                                    String s1 = list.get(j).substring(0, 1).toUpperCase();
+                                    String seter = s1 + list.get(j).substring(1);
+                                    Method me = clazz.getMethod("set" + seter, input[k].getType() );
+                                    if (input[k].getType().isArray()==false) {
+                                        String object2 = request.getParameter(input[k].getName());
+                                        if (input[k].getType() == java.util.Date.class) {
+                                            SimpleDateFormat newF = new SimpleDateFormat("yyyy-MM-dd",Locale.ENGLISH);
+                                            Date newD = newF.parse(object2);
+                                            me.invoke(object, newD);
+                                        }else if (input[k].getType() == java.sql.Date.class) {
+                                            java.sql.Date obj = java.sql.Date.valueOf(object2);
+                                            me.invoke(object, obj);
+                                        }else {
+                                            Object obj = input[k].getType().getConstructor(String.class).newInstance(object2);
+                                            me.invoke(object, obj);
+                                        }    
+                                    } else{
+                                        String[] resultToString = request.getParameterValues(table);
+                                        me.invoke(object,(Object) resultToString);
+                                        throw new Exception("eto "+resultToString[0]);
+                                    }
+                                }
+                            }
+                        }
+
                         Method equalMethod = null;
                         for (int i = 0; i < methods.length; i++) {
                             if (methods[i].getName().trim().compareTo(mapping.getMethod())==0) {
@@ -58,12 +98,14 @@ public class FrontServlet extends HttpServlet{
                                 break;
                             }
                         }
-                        Object[] objects = new Object[1];
+                        // Object[] objects = new Object[1];
                         Object returnObject = equalMethod.invoke(object);
                         if (returnObject instanceof ModelView) {
                             ModelView modelview = (ModelView) returnObject;
-                            RequestDispatcher requestDispatcher = request.getRequestDispatcher(modelview.getView());
-                            requestDispatcher.forward(request, response);
+                            HashMap<String,Object> data = modelview.getData();
+                            for(Map.Entry<String,Object> o : data.entrySet()){
+                                request.setAttribute(o.getKey(),o.getValue());
+                            }  
                         }
                     }
                 }   
