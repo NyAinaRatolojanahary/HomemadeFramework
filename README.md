@@ -4,8 +4,9 @@
 Comment utiliser le framework?
 # Configuration
 
-Mettre dans le lib de votre projet le framework.jar
-Mettre dans un seul package tous les classes
+    Mettre dans le lib de votre projet le framework.jar
+    
+    Mettre dans un seul package tous les classes
 
     -Pour plusieurs classes(Models) : mettre dans un seul package Ex : Test/Models - Emp.java - Dept.java 
 
@@ -20,7 +21,8 @@ Mettre dans un seul package tous les classes
 Importer les packages dans votre classe : -> ETU2058.Framework.ModelView ->  ETU2058.Framework.Annotation
 
 Routage : 
-    -    Annoter les fonctions avec @Annotation(url="votrechoix") Ex: @Annotation(url="findAll") public void findAll(){ System.out.println("findAll"); }
+
+    - Annoter les fonctions avec @Annotation(url="votrechoix") Ex: @Annotation(url="findAll") public void findAll(){ System.out.println("findAll"); }
 
 Affichage d'un view:
 
