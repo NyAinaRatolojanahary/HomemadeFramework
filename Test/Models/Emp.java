@@ -4,6 +4,7 @@ import java.sql.Date;
 import ETU2058.Framework.Annotation;
 import ETU2058.Framework.ModelView;
 import ETU2058.Framework.FileUploader;
+import ETU2058.Framework.Parametre;
 
 public class Emp {
 
@@ -78,6 +79,11 @@ public class Emp {
         temp.addItem("img",this.getFile().getNom());
         temp.setView("Teste.jsp");
 
+    @Annotation(url="getParam")
+    public ModelView getParam(@Parametre(param="param")Integer i){
+        ModelView temp = new ModelView();
+        temp.addItem("test",i);
+        temp.setView("Teste.jsp");
         return temp;
     }
 

@@ -7,4 +7,3 @@ import java.lang.annotation.*;
 public @interface Parametre {
     public String param() default "";    
 }
-
