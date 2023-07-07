@@ -3,6 +3,7 @@ import java.sql.Date;
 
 import ETU2058.Framework.Annotation;
 import ETU2058.Framework.ModelView;
+import ETU2058.Framework.FileUploader;
 import ETU2058.Framework.Parametre;
 
 public class Emp {
@@ -11,6 +12,7 @@ public class Emp {
     Date sqlDate;
     java.util.Date utilDate; 
     String[] table;
+    FileUploader file;
 
     public void setNom(String nom) {
         this.nom = nom;
@@ -37,6 +39,15 @@ public class Emp {
         return table;
     }
 
+    public void setFile(FileUploader file) {
+        this.file = file;
+    }
+    public FileUploader getFile() {
+        return file;
+    }
+
+
+
     @Annotation(url="findAll")
     public void findAll(){
         System.out.println("findAll");
@@ -61,6 +72,12 @@ public class Emp {
         // }
         return temp;
     }
+
+    @Annotation(url="getFile")
+    public ModelView getFiles(){
+        ModelView temp = new ModelView();
+        temp.addItem("img",this.getFile().getNom());
+        temp.setView("Teste.jsp");
 
     @Annotation(url="getParam")
     public ModelView getParam(@Parametre(param="param")Integer i){

@@ -1,6 +1,6 @@
 <%
-    Integer i = (Integer) request.getAttribute("test");
-    out.println(i);
+    String nom = (String)request.getAttribute("img");
+    out.println(nom);
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,13 +12,9 @@
 </head>
 <body>
     <h1>Hello From Test.jsp</h1>
-    <form action="getVal" method="post">
-        <input type="text" name="nom" id="">
-        <input type="date" name="sqlDate" id="">
-        <input type="date" name="utilDate" id="">
-        <input type="checkbox" name="table[]" id="" value="true">
-        <input type="checkbox" name="table[]" id="" value="false">
-        <input type="submit" value="Confirm">
+    <form action="getFile" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" id="">
+        <input type="submit" value="">
     </form>
 </body>
 </html>
