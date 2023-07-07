@@ -6,8 +6,8 @@ Comment utiliser le framework?
     Mettre dans le lib de votre projet le framework.jar
     Mettre dans un seul package tous les classes
 
-        -Pour plusieurs classes(Models) : mettre dans un seul package Ex : Test/Models - Emp.java - Dept.java 
-        -Ajouter dans le web.xml le package Dans le web.xml "ETU2058.Framework.servlet.FrontServlet" doit etre inclus et mettre dans le init-param votre packages
+    -Pour plusieurs classes(Models) : mettre dans un seul package Ex : Test/Models - Emp.java - Dept.java 
+    -Ajouter dans le web.xml le package Dans le web.xml "ETU2058.Framework.servlet.FrontServlet" doit etre inclus et mettre dans le init-param votre packages
         Ex: NomQueVousVoulez etu1922.framework.servlet.FrontServlet packages VotreNomDePackage
 
     Utiliser servlet-api.jar (jakarta) et JDK 17
