@@ -1,7 +1,8 @@
 # HomemadeFramework
 
+
 Comment utiliser le framework?
-#Configuration
+# Configuration
 
     Mettre dans le lib de votre projet le framework.jar
     Mettre dans un seul package tous les classes
@@ -12,7 +13,7 @@ Comment utiliser le framework?
 
     Utiliser servlet-api.jar (jakarta) et JDK 17
 
-Utilisation dans un projet
+# Utilisation dans un projet
 
     Importer les packages dans votre classe : -> ETU2058.Framework.ModelView ->  ETU2058.Framework.Annotation
 
