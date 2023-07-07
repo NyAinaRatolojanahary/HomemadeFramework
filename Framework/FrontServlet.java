@@ -38,18 +38,19 @@ import ETU2058.Framework.ModelView;
 import ETU2058.Framework.FileUploader;
 import ETU2058.Framework.Scope;
 import ETU2058.Framework.Authentification;
+import ETU2058.Framework.Session;
 
 
 @MultipartConfig
 public class FrontServlet extends HttpServlet {
-
+    
     HashMap<String,Mapping> mappingUrls = new HashMap<String,Mapping>();
     HashMap<String,Object> singleton = new HashMap<String,Object>();
     String sessionN;
     String sessionProfil;
 
     public void init() {
-        String packageName = "Test.Models";
+        String packageName = "test_framework.Test";
         try {
             sessionN = getInitParameter("sessionN");
             sessionProfil = getInitParameter("sessionProfil");
@@ -223,16 +224,39 @@ public class FrontServlet extends HttpServlet {
                                 throw new Exception(" privilege non accorder ");
                             }
                         } else {
-                            throw new Exception("Session non trouvé");
+                            throw new Exception("tsy misy session ");
                         }
                     }
+                    if (equalMethod.isAnnotationPresent(Session.class)) {
+                        Method method = clazz.getDeclaredMethod("setSession", HashMap.class);
+                        HashMap<String, Object> ses = new HashMap<String, Object>();
+                        Enumeration<String> noms = request.getSession().getAttributeNames();
+                        List<String> listeStrings = Collections.list(noms);
+                        for (String string : listeStrings) {
+                            Object temp = request.getSession().getAttribute(string);
+                            ses.put(string, temp);
+                        }
+                        method.invoke(object, ses);
+                    }
                 returnObject = equalMethod.invoke(object, params);
+                    if (equalMethod.isAnnotationPresent(Session.class)) {
+                        Method method = clazz.getDeclaredMethod("getSession");
+                        HashMap<String, Object> ses = new HashMap<String, Object>();
+                        ses = (HashMap<String, Object>)method.invoke(object);
+                        for (Map.Entry<String, Object> o : ses.entrySet()) {
+                            request.getSession().setAttribute(o.getKey(), o.getValue());
+                        }
+                    }
                 
                 if (returnObject instanceof ModelView) {
                     ModelView modelview = (ModelView) returnObject;
                     HashMap<String,Object> data = modelview.getData();
+                    HashMap<String, Object> session = modelview.getSession();
                     for(Map.Entry<String,Object> o : data.entrySet()){
                         request.setAttribute(o.getKey(),o.getValue());
+                    }
+                    for (Map.Entry<String, Object> o : session.entrySet()) {
+                        request.getSession().setAttribute(o.getKey(), o.getValue());
                     }  
                     RequestDispatcher requestDispatcher = request.getRequestDispatcher(modelview.getView());
                     requestDispatcher.forward(request, response);
