@@ -19,18 +19,19 @@ Ex: NomQueVousVoulez ETU2058.Framework.servlet.FrontServlet packages VotreNomDeP
 Importer les packages dans votre classe : -> ETU2058.Framework.ModelView ->  ETU2058.Framework.Annotation
 
 Routage : 
--Annoter les fonctions avec @Annotation(url="votrechoix") Ex: @Annotation(url="findAll") public void findAll(){ System.out.println("findAll"); }
+    -    Annoter les fonctions avec @Annotation(url="votrechoix") Ex: @Annotation(url="findAll") public void findAll(){ System.out.println("findAll"); }
 
-Affichage d'un view
-Mettre le type de retour du fonction en ModelView
+Affichage d'un view:
 
-Pour passer les donnees depuis le View utiliser le methode POST
-Les données vont s'affecter vers l'attribut du class contenant la fonction à executer si la clé et l'attribut ont le même nom sinon rien ne se passe
-Si le type de l'attribut est un tableau votre input name doit etre se terminer par []
+    Mettre le type de retour du fonction en ModelView
+
+Pour passer les donnees depuis le View: utiliser le methode POST
+    -Les données vont s'affecter vers l'attribut du class contenant la fonction à executer si la clé et l'attribut ont le même nom sinon rien ne se passe
+    -Si le type de l'attribut est un tableau votre input name doit etre se terminer par []
 
 Pour passer les valeurs aux parametres du fonction:
 
-on peut l'affecter depuis le @Parametre dans  ETU2058.Framework.Parametre Ex: @Annotation(url="getParam") public ModelView getParam(@Parametre(param="param")Integer i){ ModelView temp = new ModelView(); temp.addItem("test",i); temp.setView("Teste.jsp"); return temp; }
+    - On peut l'affecter depuis le @Parametre dans  ETU2058.Framework.Parametre Ex: @Annotation(url="getParam") public ModelView getParam(@Parametre(param="param")Integer i){ ModelView temp = new ModelView(); temp.addItem("test",i); temp.setView("Teste.jsp"); return temp; }
 
 Upload fichier : 
 
