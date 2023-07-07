@@ -26,6 +26,7 @@ Affichage d'un view:
     Mettre le type de retour du fonction en ModelView
 
 Pour passer les donnees depuis le View: utiliser le methode POST
+
     -Les données vont s'affecter vers l'attribut du class contenant la fonction à executer si la clé et l'attribut ont le même nom sinon rien ne se passe
     -Si le type de l'attribut est un tableau votre input name doit etre se terminer par []
 
