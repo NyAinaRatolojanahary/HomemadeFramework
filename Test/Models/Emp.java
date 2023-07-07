@@ -6,6 +6,7 @@ import ETU2058.Framework.ModelView;
 import ETU2058.Framework.FileUploader;
 import ETU2058.Framework.Parametre;
 import ETU2058.Framework.Scope;
+import ETU2058.Framework.Authentification;
 
 @Scope(scope="Emp")
 public class Emp {
@@ -65,6 +66,7 @@ public class Emp {
         return temp;
     } 
 
+    @Authentification(profil="admin")
     @Annotation(url="getVal")
     public ModelView getValueFromView(){
         ModelView temp = new ModelView();
@@ -86,6 +88,15 @@ public class Emp {
         ModelView temp = new ModelView();
         temp.addItem("test",i);
         temp.setView("Teste.jsp");
+        return temp;
+    }
+
+    @Annotation(url="login")
+    public ModelView login() {
+        ModelView temp = new ModelView();
+        temp.addSession("isConnected", true);
+        temp.addSession("profil","admin");
+        temp.setView("index.jsp");
         return temp;
     }
 
