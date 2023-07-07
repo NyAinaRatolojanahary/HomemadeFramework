@@ -36,15 +36,18 @@ import ETU2058.Framework.Utils;
 import ETU2058.Framework.Parametre;
 import ETU2058.Framework.ModelView;
 import ETU2058.Framework.FileUploader;
+import ETU2058.Framework.Scope;
 
 
 @MultipartConfig
 public class FrontServlet extends HttpServlet {
     HashMap<String,Mapping> mappingUrls = new HashMap<String,Mapping>();
+    HashMap<String,Object> singleton = new HashMap<String,Object>();
+
     public void init() {
         String packageName = "test_framework.Test";
         try {
-            List<Class> allClass = Outil.getClass(packageName);
+            List<Class> allClass = Utils.getClass(packageName);
             for (int i = 0; i < allClass.size(); i++) {
                 Class temp = allClass.get(i);
                 Method[] methods = temp.getDeclaredMethods();
@@ -52,6 +55,11 @@ public class FrontServlet extends HttpServlet {
                     if (methods[j].isAnnotationPresent(Annotation.class)) {
                         Mapping mapping = new Mapping(temp.getName(),methods[j].getName());
                         this.mappingUrls.put(methods[j].getAnnotation(Annotation.class).url(), mapping);
+                    }
+                }
+                for (int k = 0; k < allClass.size(); k++) {
+                    if (allClass.get(k).isAnnotationPresent(Scope.class)) {
+                        this.singleton.put(allClass.get(k).getName(), null);
                     }
                 }
             }
@@ -189,7 +197,7 @@ public class FrontServlet extends HttpServlet {
                 try {
                     Collection<Part> files = request.getParts();
                     for (Field f : input) {
-                        if (f.getType() == etu1922.framework.FileUploader.class) {
+                        if (f.getType() == ETU2058.Framework.FileUploader.class) {
                             String s1 = f.getName().substring(0, 1).toUpperCase();
                             String seter = s1 + f.getName().substring(1);
                             Method m = clazz.getMethod("set" + seter, f.getType());
