@@ -11,6 +11,14 @@
     <title>Matching Date</title>
 </head>
 <body>
-    <h1>Hello from Test.jsp</h1>
+    <h1>Hello From Test.jsp</h1>
+    <form action="getVal" method="post">
+        <input type="text" name="nom" id="">
+        <input type="date" name="sqlDate" id="">
+        <input type="date" name="utilDate" id="">
+        <input type="checkbox" name="table[]" id="" value="true">
+        <input type="checkbox" name="table[]" id="" value="false">
+        <input type="submit" value="Confirm">
+    </form>
 </body>
 </html>

@@ -1,4 +1,5 @@
 package ETU2058.Framework;
+import java.util.HashMap;
 
 public class ModelView{
 

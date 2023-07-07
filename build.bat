@@ -2,9 +2,9 @@
 
 set "FRAMEWORK_FOLDER=D:\Bossy\L2\S4\MyFramework\"
 
-set FRAMEWORK="D:\Bossy\L2\S4\MyFramework\Framework"
-set TOMCAT="C:\Program Files\Apache Software Foundation\Tomcat 10.0\webapps"
-set TESTFRAMEWORK="D:\Bossy\L2\S4\MyFramework\Test"
+set FRAMEWORK="D:\\Bossy\\L2\\S4\\MyFramework\\Framework"
+set TOMCAT="C:\\Program Files\\Apache Software Foundation\\Tomcat 10.0\\webapps"
+set TESTFRAMEWORK="D:\Bossy\L2\S4\MyFramework\Test\Models"
 
 javac -d %FRAMEWORK%\bin %FRAMEWORK%\\*.java
 cd %FRAMEWORK%\\bin\\
@@ -22,8 +22,9 @@ mkdir temp\\WEB-INF\\classes
 
 xcopy %TESTFRAMEWORK%\\*.jsp temp
 xcopy %TESTFRAMEWORK%\\lib temp\\WEB-INF\\lib
-javac -cp temp\\WEB-INF\\lib\\framework.jar -d temp\\WEB-INF\\classes %TESTFRAMEWORK%\\Test\\*.java
+javac -cp temp\\WEB-INF\\lib\\framework.jar -d temp\\WEB-INF\\classes %TESTFRAMEWORK%\*.java
 xcopy %TESTFRAMEWORK%\\*.xml temp\\WEB-INF
+
 @REM rmdir -r temp
 
 cd temp
