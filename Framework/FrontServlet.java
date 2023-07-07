@@ -37,16 +37,22 @@ import ETU2058.Framework.Parametre;
 import ETU2058.Framework.ModelView;
 import ETU2058.Framework.FileUploader;
 import ETU2058.Framework.Scope;
+import ETU2058.Framework.Authentification;
+import ETU2058.Framework.Session;
 
 
 @MultipartConfig
 public class FrontServlet extends HttpServlet {
+    
     HashMap<String,Mapping> mappingUrls = new HashMap<String,Mapping>();
     HashMap<String,Object> singleton = new HashMap<String,Object>();
-
+    String sessionN;
+    String sessionProfil;
     public void init() {
-        String packageName = "test_framework.Test";
+        String packageName = "Test.Models";
         try {
+            sessionN = getInitParameter("sessionN");
+            sessionProfil = getInitParameter("sessionProfil");
             List<Class> allClass = Utils.getClass(packageName);
             for (int i = 0; i < allClass.size(); i++) {
                 Class temp = allClass.get(i);
@@ -107,8 +113,6 @@ public class FrontServlet extends HttpServlet {
         }
         return null;
     }
-
-
         public void processRequest(HttpServletRequest request, HttpServletResponse response)
                 throws ServletException, IOException {
             PrintWriter out = response.getWriter();
@@ -152,7 +156,6 @@ public class FrontServlet extends HttpServlet {
                         }
                     }
                 }
-
                 Method equalMethod = null;
                 out.println(methods);
                 for (int i = 0; i < methods.length; i++) {
@@ -161,7 +164,6 @@ public class FrontServlet extends HttpServlet {
                         break;
                     }
                 }
-
                 // out.print(equalMethod.getName() + "Methode");
                 Parameter[] p = equalMethod.getParameters();
                 Object[] params = new Object[p.length];
@@ -192,8 +194,6 @@ public class FrontServlet extends HttpServlet {
                         }
                     }
                 }
-
-
                 try {
                     Collection<Part> files = request.getParts();
                     for (Field f : input) {
@@ -205,16 +205,50 @@ public class FrontServlet extends HttpServlet {
                             m.invoke(object, o);
                         }
                     }
-                } catch (Exception e) {
-                    
+                } catch (Exception e) { 
                 }
+                // Object returnObject = equalMethod.invoke(object, params);
+                Object returnObject = null;
+                    if (equalMethod.isAnnotationPresent(Authentification.class)) {
+                        Authentification auth = equalMethod.getAnnotation(Authentification.class);
+                        if (request.getSession().getAttribute(sessionN)!=null) {
+                            if ((auth.profil().isEmpty() == false && !auth.profil().equals(request.getSession().getAttribute(sessionProfil)))) {
+                                throw new Exception(" privilege non accorder ");
+                            }
+                        } else {
+                            throw new Exception("tsy misy session ");
+                        }
+                    }
+                    if (equalMethod.isAnnotationPresent(Session.class)) {
+                        Method method = clazz.getDeclaredMethod("setSession", HashMap.class);
+                        HashMap<String, Object> ses = new HashMap<String, Object>();
+                        Enumeration<String> noms = request.getSession().getAttributeNames();
+                        List<String> listeStrings = Collections.list(noms);
+                        for (String string : listeStrings) {
+                            Object temp = request.getSession().getAttribute(string);
+                            ses.put(string, temp);
+                        }
+                        method.invoke(object, ses);
+                    }
+                returnObject = equalMethod.invoke(object, params);
+                    if (equalMethod.isAnnotationPresent(Session.class)) {
+                        Method method = clazz.getDeclaredMethod("getSession");
+                        HashMap<String, Object> ses = new HashMap<String, Object>();
+                        ses = (HashMap<String, Object>)method.invoke(object);
+                        for (Map.Entry<String, Object> o : ses.entrySet()) {
+                            request.getSession().setAttribute(o.getKey(), o.getValue());
+                        }
+                    }
 
-                Object returnObject = equalMethod.invoke(object, params);
                 if (returnObject instanceof ModelView) {
                     ModelView modelview = (ModelView) returnObject;
                     HashMap<String,Object> data = modelview.getData();
+                    HashMap<String, Object> session = modelview.getSession();
                     for(Map.Entry<String,Object> o : data.entrySet()){
                         request.setAttribute(o.getKey(),o.getValue());
+                    }
+                    for (Map.Entry<String, Object> o : session.entrySet()) {
+                        request.getSession().setAttribute(o.getKey(), o.getValue());
                     }  
                     RequestDispatcher requestDispatcher = request.getRequestDispatcher(modelview.getView());
                     requestDispatcher.forward(request, response);
@@ -222,12 +256,10 @@ public class FrontServlet extends HttpServlet {
             }
         }catch (Exception e) {e.printStackTrace(out);}
         }
-
         @Override
         public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
             processRequest(request, response);
         }
-
         @Override
         public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
             processRequest(request, response);
