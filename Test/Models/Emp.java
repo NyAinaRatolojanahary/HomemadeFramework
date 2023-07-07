@@ -5,7 +5,9 @@ import ETU2058.Framework.Annotation;
 import ETU2058.Framework.ModelView;
 import ETU2058.Framework.FileUploader;
 import ETU2058.Framework.Parametre;
+import ETU2058.Framework.Scope;
 
+@Scope(scope="Emp")
 public class Emp {
 
     String nom;
