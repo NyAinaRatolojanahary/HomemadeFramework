@@ -48,8 +48,9 @@ public class FrontServlet extends HttpServlet {
     HashMap<String,Object> singleton = new HashMap<String,Object>();
     String sessionN;
     String sessionProfil;
+
     public void init() {
-        String packageName = "Test.Models";
+        String packageName = "test_framework.Test";
         try {
             sessionN = getInitParameter("sessionN");
             sessionProfil = getInitParameter("sessionProfil");
@@ -113,6 +114,8 @@ public class FrontServlet extends HttpServlet {
         }
         return null;
     }
+
+
         public void processRequest(HttpServletRequest request, HttpServletResponse response)
                 throws ServletException, IOException {
             PrintWriter out = response.getWriter();
@@ -156,6 +159,7 @@ public class FrontServlet extends HttpServlet {
                         }
                     }
                 }
+
                 Method equalMethod = null;
                 out.println(methods);
                 for (int i = 0; i < methods.length; i++) {
@@ -164,6 +168,7 @@ public class FrontServlet extends HttpServlet {
                         break;
                     }
                 }
+
                 // out.print(equalMethod.getName() + "Methode");
                 Parameter[] p = equalMethod.getParameters();
                 Object[] params = new Object[p.length];
@@ -194,6 +199,8 @@ public class FrontServlet extends HttpServlet {
                         }
                     }
                 }
+
+
                 try {
                     Collection<Part> files = request.getParts();
                     for (Field f : input) {
@@ -207,6 +214,7 @@ public class FrontServlet extends HttpServlet {
                     }
                 } catch (Exception e) { 
                 }
+
                 // Object returnObject = equalMethod.invoke(object, params);
                 Object returnObject = null;
                     if (equalMethod.isAnnotationPresent(Authentification.class)) {
@@ -239,7 +247,7 @@ public class FrontServlet extends HttpServlet {
                             request.getSession().setAttribute(o.getKey(), o.getValue());
                         }
                     }
-
+                
                 if (returnObject instanceof ModelView) {
                     ModelView modelview = (ModelView) returnObject;
                     HashMap<String,Object> data = modelview.getData();
@@ -256,10 +264,12 @@ public class FrontServlet extends HttpServlet {
             }
         }catch (Exception e) {e.printStackTrace(out);}
         }
+
         @Override
         public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
             processRequest(request, response);
         }
+
         @Override
         public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
             processRequest(request, response);

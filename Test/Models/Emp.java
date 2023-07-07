@@ -69,7 +69,10 @@ public class Emp {
         int value = 25;
         temp.addItem("Mety",value);
         return temp;
+
     }
+
+
     @Authentification(profil="admin")
     @Annotation(url="getVal")
     public ModelView getValueFromView(){
@@ -114,6 +117,15 @@ public class Emp {
         ModelView temp = new ModelView();
         this.getSession().put("profil","test");
         temp.addItem("session",this.getSession());
+        temp.setView("index.jsp");
+        return temp;
+    }
+
+    @Annotation(url="login")
+    public ModelView login() {
+        ModelView temp = new ModelView();
+        temp.addSession("isConnected", true);
+        temp.addSession("profil","admin");
         temp.setView("index.jsp");
         return temp;
     }
