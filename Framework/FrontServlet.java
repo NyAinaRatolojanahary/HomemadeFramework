@@ -16,11 +16,13 @@ import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Map;
 import java.text.SimpleDateFormat;
+import java.lang.reflect.Parameter;
 
 import ETU2058.Framework.Annotation;
 import ETU2058.Framework.Mapping;
 import ETU2058.Framework.Utils;
 import ETU2058.Framework.ModelView;
+import ETU2058.Framework.Parametre;
 
 public class FrontServlet extends HttpServlet{
         HashMap<String,Mapping> mappingUrls = new HashMap<String,Mapping>();
@@ -97,14 +99,47 @@ public class FrontServlet extends HttpServlet{
                                 break;
                             }
                         }
-                        // Object[] objects = new Object[1];
-                        Object returnObject = equalMethod.invoke(object);
+                        
+                        out.print(equalMethod.getName() + "Methode");
+                        Parameter[] p = equalMethod.getParameters();
+                        Object[] params = new Object[p.length];
+                        for (int i = 0; i < p.length; i++) {
+                            if (p[i].isAnnotationPresent(Parametre.class)) {
+                                Parametre annotation = p[i].getAnnotation(Parametre.class);
+                                String temp = p[i].getAnnotation(Parametre.class).param() + ((p[i].getType().isArray()) ? "[]" : "");
+                                for (int j = 0; j < list.size(); j++) {
+                                    if (temp.trim().equals(list.get(j).trim())) {
+                                        if (p[i].getType().isArray()==false) {
+                                            String object2 = request.getParameter(temp);
+                                            if (p[i].getType() == java.util.Date.class) {
+                                                SimpleDateFormat newF = new SimpleDateFormat("yyyy-MM-dd",Locale.ENGLISH);
+                                                Date newD = newF.parse(object2);
+                                                params[i] = newD;
+                                            }else if (p[i].getType() == java.sql.Date.class) {
+                                                java.sql.Date obj = java.sql.Date.valueOf(object2);
+                                                params[i] = obj;
+                                            }else {
+                                                Object obj = p[i].getType().getConstructor(String.class).newInstance(object2);
+                                                params[i] = obj;
+                                            }    
+                                        } else{
+                                            String[] resultToString = request.getParameterValues(temp);
+                                            params[i] = resultToString;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        Object returnObject = equalMethod.invoke(object, params);
+
                         if (returnObject instanceof ModelView) {
                             ModelView modelview = (ModelView) returnObject;
                             HashMap<String,Object> data = modelview.getData();
                             for(Map.Entry<String,Object> o : data.entrySet()){
                                 request.setAttribute(o.getKey(),o.getValue());
                             }  
+                            RequestDispatcher requestDispatcher = request.getRequestDispatcher(modelview.getView());
+                            requestDispatcher.forward(request, response);
                         }
                     }
                 }   

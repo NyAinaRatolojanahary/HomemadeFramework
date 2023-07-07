@@ -3,6 +3,7 @@ import java.sql.Date;
 
 import ETU2058.Framework.Annotation;
 import ETU2058.Framework.ModelView;
+import ETU2058.Framework.Parametre;
 
 public class Emp {
 
@@ -58,6 +59,14 @@ public class Emp {
         // for (int i = 0; getTable() != null && i < getTable().length; i++) {
         //     System.out.println(getTable()[i]);
         // }
+        return temp;
+    }
+
+    @Annotation(url="getParam")
+    public ModelView getParam(@Parametre(param="param")Integer i){
+        ModelView temp = new ModelView();
+        temp.addItem("test",i);
+        temp.setView("Teste.jsp");
         return temp;
     }
 

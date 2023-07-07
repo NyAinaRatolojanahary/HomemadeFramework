@@ -1,6 +1,6 @@
 <%
-    Integer val = (Integer)request.getAttribute("Mety");
-    out.print(val);
+    Integer i = (Integer) request.getAttribute("test");
+    out.println(i);
 %>
 <!DOCTYPE html>
 <html lang="en">
