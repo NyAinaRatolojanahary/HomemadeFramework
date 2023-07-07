@@ -37,16 +37,22 @@ import ETU2058.Framework.Parametre;
 import ETU2058.Framework.ModelView;
 import ETU2058.Framework.FileUploader;
 import ETU2058.Framework.Scope;
+import ETU2058.Framework.Authentification;
 
 
 @MultipartConfig
 public class FrontServlet extends HttpServlet {
+
     HashMap<String,Mapping> mappingUrls = new HashMap<String,Mapping>();
     HashMap<String,Object> singleton = new HashMap<String,Object>();
+    String sessionN;
+    String sessionProfil;
 
     public void init() {
-        String packageName = "test_framework.Test";
+        String packageName = "Test.Models";
         try {
+            sessionN = getInitParameter("sessionN");
+            sessionProfil = getInitParameter("sessionProfil");
             List<Class> allClass = Utils.getClass(packageName);
             for (int i = 0; i < allClass.size(); i++) {
                 Class temp = allClass.get(i);
@@ -205,11 +211,23 @@ public class FrontServlet extends HttpServlet {
                             m.invoke(object, o);
                         }
                     }
-                } catch (Exception e) {
-                    
+                } catch (Exception e) { 
                 }
 
-                Object returnObject = equalMethod.invoke(object, params);
+                // Object returnObject = equalMethod.invoke(object, params);
+                Object returnObject = null;
+                    if (equalMethod.isAnnotationPresent(Authentification.class)) {
+                        Authentification auth = equalMethod.getAnnotation(Authentification.class);
+                        if (request.getSession().getAttribute(sessionN)!=null) {
+                            if ((auth.profil().isEmpty() == false && !auth.profil().equals(request.getSession().getAttribute(sessionProfil)))) {
+                                throw new Exception(" privilege non accorder ");
+                            }
+                        } else {
+                            throw new Exception("Session non trouvé");
+                        }
+                    }
+                returnObject = equalMethod.invoke(object, params);
+                
                 if (returnObject instanceof ModelView) {
                     ModelView modelview = (ModelView) returnObject;
                     HashMap<String,Object> data = modelview.getData();
